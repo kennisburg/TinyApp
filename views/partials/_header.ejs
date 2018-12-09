@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>TinyApp</title>
+  </head>
+  <body>
+
+
+    <header>TinyApp</header>
+
+    <% if (!username) { %>
+
+    <form method="POST" action="/login">
+      <label for="username">Username:</label>
+      <input type="text" name="username">
+      
+      <label for="password">Password:</label>
+      <input type="password" name="password">
+      <input type="submit" value="Login">
+    </form>
+
+
+    <a href="/login">Login</a>
+    <a href="/registration">Register</a>
+
+    <% } else { %>
+
+      <%= username %>
+
+
+      <form method="POST" action="/logout">
+        <input type="submit" value="Logout">
+      </form>
+
+    <% } %>
+
+  </body>
+</html>

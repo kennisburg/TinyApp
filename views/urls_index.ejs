@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang='en'>
+  <head>
+    <title>TinyApp</title>
+  </head>
+  <body>
+    <% include partials/_header %>
+ 
+        <fieldset>
+          <% for (var i in urls) { %>
+
+              <%= urls[i].shortURL %>: <%= urls[i].longURL %>
+              
+
+              <section>
+              <a href="/urls/<%= urls[i].shortURL %>">Update</a>
+
+              <form method="POST" action="/urls/<%= urls[i].shortURL %>/delete">
+                <input type="submit" value="Delete">
+              </form>
+
+              <hr />  
+
+              </section>
+
+              <% } %>
+    </fieldset>
+    <a href="/urls/new">Add New Link</a>
+  </body>
+</html>

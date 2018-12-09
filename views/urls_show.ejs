@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head></head>
+  <body>
+
+
+    Short URL: <%= shortURL %>
+
+    <form method="POST" action="/urls/<%= shortURL %>">
+      <label for="longURL">Update URL: </label>
+      <input id="longURL" type="text" name="longURL" placeholder="http//:">
+      <input type="submit" value="Update">
+    </form>
+
+  </body>
+</html>

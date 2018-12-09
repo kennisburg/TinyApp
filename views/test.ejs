@@ -1,0 +1,35 @@
+
+
+<!doctype html>
+<html lang='en'>
+  <head>
+    <title>TinyApp</title>
+  </head>
+  <body>
+    <% include partials/_header %>
+
+
+    <fieldset>
+      <% for (var i in urls) { %>
+        
+        <% if (username == urls[i].userId) { %> 
+
+          <%= i %>: <%= urls[i].longURL %>
+
+          <section>
+  
+          <a href="/urls/<%= i %>">Update</a>
+          
+          <form method="POST" action="/urls/<%= i %>/delete">
+            <input type="submit" value="Delete">
+          </form>
+          <hr />  
+          </section>
+          
+
+          <% } %>
+        
+      <% } %>
+    </fieldset>
+  </body>
+</html>
