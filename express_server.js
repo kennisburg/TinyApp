@@ -70,7 +70,14 @@ function userURL(id) {
 
 
 app.get('/', (req, res) => {
-  res.send('<html><body>Hello <b>World</b></body></html>\n');
+  res.send(`<html>
+              <body>
+                Hello <b>World</b>
+                <section>
+                  <a href='/urls'>To TinyApp</a>
+                </section>
+              </body>
+            </html>\n`);
 });
 
 app.get('/login', (req, res) => {
@@ -84,11 +91,10 @@ app.get('/registration', (req, res) => {
 
 app.get('/urls', (req, res) => {
   let templateVars = {
-  urls: userURL(req.session.user_id),
-  username: req.session.user_id
+    urls: userURL(req.session.user_id),
+    username: req.session.user_id,
+    user: users
   }
-  console.log(userURL(req.session.user_id))
-  console.log(req.session.user_id)
   res.render('urls_index', templateVars)
 });
 
@@ -97,31 +103,43 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
-  let templateVars = {username: req.session.user_id}
+  let templateVars = {
+    username: req.session.user_id,
+    user: users
+  }
   res.render('urls_new', templateVars)
 })
 
 app.get('/urls/:id', (req, res) => {
-  let templateVars = {shortURL: req.params.id,
-    username: req.session.user_id}
+  let templateVars = {
+    shortURL: req.params.id,
+    username: req.session.user_id,
+    user:users
+  }
   res.render('urls_show', templateVars);
 })
 
-
 app.get('/u/:shortURL', (req, res) => {
   let longURL = urlDatabase[req.params.shortURL].longURL;
-  res.redirect('http://' + longURL)
+  if (longURL.slice(0, 5) === 'http:' || longURL.slice(0, 6) === 'https:') {
+    res.redirect(longURL);
+  } else {
+    res.redirect('https://' + longURL)
+  }
 })
 
+app.get('/:id', (req, res) => {
+  res.sendStatus(404);
+})
 
 app.post('/registration', (req, res) => {
   var NewID = generateRandomString();
 
   for (var i in users) {
-    if (req.body.email === users[i]) {
-      res.sendStatus(400).send("email exists")
+    if (req.body.email === users[i].email) {
+      res.send("Email already exists").sendStatus(400)
     } else if (!req.body.email || !req.body.password) {
-      res.sendStatus(400).send("enter valid email or password")
+      res.send("Enter valid Email or Password")
     } else {
       users[NewID] = {};
       users[NewID].id = NewID;
@@ -129,8 +147,6 @@ app.post('/registration', (req, res) => {
       users[NewID].password = bcrypt.hashSync(req.body.password, 10);
     }
   }
-  console.log(users)
-
   res.redirect('/urls');
 })
 
@@ -140,34 +156,24 @@ app.post('/urls', (req, res) => {
   urlDatabase[newURL].shortURL = newURL;
   urlDatabase[newURL].longURL = req.body.longURL;
   urlDatabase[newURL].userID = req.session.user_id;
-  console.log(urlDatabase)
   res.redirect('/urls');
 })
 
 app.post('/urls/:id', (req, res) => {
-  
   urlDatabase[req.params.id] = {};
   urlDatabase[req.params.id].shortURL = req.params.id
   urlDatabase[req.params.id].longURL = req.body.longURL;
   urlDatabase[req.params.id].userID = req.session.user_id;
-
-  console.log(urlDatabase)
   res.redirect('/urls');
 })
 
 app.post('/urls/:id/delete', (req, res) => {
-
-  console.log(urlDatabase[req.params.id])
-
   delete urlDatabase[req.params.id];
-
   res.redirect('/urls/');
 })
 
-
 app.post('/login', (req, res) => {
   for (var i in users) {
-    console.log(i, bcrypt.compareSync(req.body.password, users[i].password))
     if ((req.body.username == users[i].email) && bcrypt.compareSync(req.body.password, users[i].password)) {
       req.session.user_id = users[i].id;
       res.redirect('/urls');
@@ -181,7 +187,6 @@ app.post('/logout', (req, res) => {
   req.session.user_id = null;
   res.redirect('/urls');
 });
-
 
 app.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`)

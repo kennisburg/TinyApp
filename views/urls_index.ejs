@@ -9,15 +9,16 @@
         <fieldset>
           <% for (var i in urls) { %>
 
-              <%= urls[i].shortURL %>: <%= urls[i].longURL %>
+              <a href='/u/<%=urls[i].shortURL%>'><%= urls[i].shortURL %></a>: <%= urls[i].longURL %>        ---localhost:8080/u/<%=urls[i].shortURL%>
               
 
               <section>
-              <a href="/urls/<%= urls[i].shortURL %>">Update</a>
 
-              <form method="POST" action="/urls/<%= urls[i].shortURL %>/delete">
-                <input type="submit" value="Delete">
-              </form>
+                <a href="/urls/<%= urls[i].shortURL %>">Update</a>
+                <form method="POST" action="/urls/<%= urls[i].shortURL %>/delete">
+                  <input type="submit" value="Delete">
+                </form>
+
 
               <hr />  
 
@@ -25,6 +26,6 @@
 
               <% } %>
     </fieldset>
-    <a href="/urls/new">Add New Link</a>
+    <a href="/urls/new">Add New URL</a>
   </body>
 </html>

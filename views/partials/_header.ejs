@@ -12,7 +12,7 @@
     <% if (!username) { %>
 
     <form method="POST" action="/login">
-      <label for="username">Username:</label>
+      <label for="username">Email:</label>
       <input type="text" name="username">
       
       <label for="password">Password:</label>
@@ -21,19 +21,25 @@
     </form>
 
 
-    <a href="/login">Login</a>
-    <a href="/registration">Register</a>
+    <span>
+      <a href="/login">Login</a>
+      /
+      <a href="/registration">Register</a>
+    </span>
 
-    <% } else { %>
-
-      <%= username %>
+    <% } %>
 
 
+    <% if (username) {%>
+
+      <%= user[username].email%>
       <form method="POST" action="/logout">
         <input type="submit" value="Logout">
       </form>
 
     <% } %>
+
+
 
   </body>
 </html>
